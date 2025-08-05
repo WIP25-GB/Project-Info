@@ -64,10 +64,10 @@ We create a dedicated **Lambda Execution Role** that can **read parameters from 
 
 18. Enter a **Role name**, e.g.:
 
-   ```
-   ratingo-lambda-exec-role
-   ```
-
+     ```
+     ratingo-lambda-exec-role
+     ```
+     
 9. Click **Create role**.
 
 
