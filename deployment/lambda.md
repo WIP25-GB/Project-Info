@@ -1,31 +1,97 @@
 ## ⚙️ Chapter 5: Lambda Backend Setup
 
-### 5.1 Lambda Function
+### 5.1 IAM Execution Role
 
-Our backend is implemented as a **Lambda function** that:
+We create a dedicated **Lambda Execution Role** that can **read parameters from SSM Parameter Store**.
 
-* Connects to the RDS database
-* Uses Redis for caching
-* Retrieves secrets from SSM
+1. **Log in** to the [AWS Management Console](https://console.aws.amazon.com/).
 
-It is deployed in the **private subnet** and connects to the internet through the **NAT Gateway** (if needed for third-party APIs).
+2. Go to the **IAM** service.
 
-### 5.2 IAM Execution Role
+3. In the left menu, click on **Policies**, then click **Create policy**.
 
-We create a dedicated **Lambda Execution Role** with the following policies:
+4. Choose the **Visual editor** tab (default).
 
-* **SSM Read Access** for Parameter Store:
+5. In the **Service** section:
 
-```json
-{
-  "Effect": "Allow",
-  "Action": ["ssm:GetParameter"],
-  "Resource": "arn:aws:ssm:<region>:<account-id>:parameter/ratingo/postgres/*"
-}
-```
+   * Click **Choose a service**
+   * Search and select **Systems Manager**
 
-* Additional permissions (e.g., logging to CloudWatch, access to other AWS services) are added as needed.
+6. Under **Actions**:
 
----
+   * Expand the “Read” section.
+   * Check **GetParameter**
 
-## 📦 Next Steps
+7. Under **Resources**:
+
+   * Choose **All resources**
+
+8. Click **Next**.
+
+9. Name the policy, for example:
+
+    ```
+    ratingo-lambda-exec-policy
+    ```
+
+    Add a description (optional), e.g.:
+
+    ```
+    Allows Lambda functions to read parameters from SSM Parameter Store
+    ```
+
+11. Click **Create policy**.
+
+12. In the left menu of IAM, click **Roles**, then click **Create role**.
+
+13. Under **Trusted entity type**, choose:
+
+   * **AWS service**
+
+14. Under **Use case**, select:
+
+   * **Lambda**
+
+15. Click **Next**.
+
+16. In the **Permissions policies** step:
+
+   * Search for the policy you just created, e.g., `ratingo-lambda-exec-policy`
+   * Select the checkbox next to it.
+
+17. Click **Next**.
+
+
+18. Enter a **Role name**, e.g.:
+
+   ```
+   ratingo-lambda-exec-role
+   ```
+
+9. Click **Create role**.
+
+
+### 5.1 Security Group
+
+We create a secuirty group to allows us control what traffic is sent in and out of our lambda functions.
+
+1. Log in to the [AWS Console](https://console.aws.amazon.com/).
+
+2. Navigate to the **EC2** service.
+
+3. In the left menu, click **Security Groups**.
+
+4. Click **Create security group**.
+
+5. Name the security group
+
+    ```
+    ratingo-lambda-sg
+    ```
+
+    Add a description (optional), e.g.:
+
+    ```
+    Security group for ratingo lambda functions
+    ```
+6. Click **Create security group**
