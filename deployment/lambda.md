@@ -109,7 +109,7 @@ We create a lambda layer for the psycopg python library
 
 2. **Download the layer package:**
 
-   * Download the [psycopg2-layer.zip file](https://github.com/WIP25-GB/ratingo-backend/tree/main/lambdas/layers/psycopg2-layer)
+   * Download the [psycopg2-layer.zip file](https://github.com/WIP25-GB/ratingo-backend/blob/main/lambdas/layers/psycopg2-layer/psycopg2-layer.zip)
 
 3. **Fill in layer details:**
 
