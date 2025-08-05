@@ -26,9 +26,24 @@ We create a dedicated **Lambda Execution Role** that can **read parameters from 
 
    * Choose **All resources**
 
-8. Click **Next**.
+8. Click Add more permissions
+    **Service:** **CloudWatch Logs**
+    **Actions allowed:** search and select **CreateLogGroup**, **CreateLogStream** and **PutLogEvents**
+    **Resources:** **All**
 
-9. Name the policy, for example:
+9. Click Add more permissions
+    **Service:** **S3 Object Lambda**
+    **Actions allowed:** search and select **WriteGetObjectResponse**
+    **Resources:** **All**
+
+10. Click Add more permissions
+    **Service:** **EC2**
+    **Actions allowed:** search and select **CreateNetworkInterface**, **DescribeNetworkInterfaces** and **DeleteNetworkInterface**
+    **Resources:** **All**
+
+11. Click **Next**.
+
+12. Name the policy, for example:
 
     ```
     ratingo-lambda-exec-policy
@@ -40,35 +55,35 @@ We create a dedicated **Lambda Execution Role** that can **read parameters from 
     Allows Lambda functions to read parameters from SSM Parameter Store
     ```
 
-11. Click **Create policy**.
+13. Click **Create policy**.
 
-12. In the left menu of IAM, click **Roles**, then click **Create role**.
+14. In the left menu of IAM, click **Roles**, then click **Create role**.
 
-13. Under **Trusted entity type**, choose:
+15. Under **Trusted entity type**, choose:
 
    * **AWS service**
 
-14. Under **Use case**, select:
+16. Under **Use case**, select:
 
    * **Lambda**
 
-15. Click **Next**.
+17. Click **Next**.
 
-16. In the **Permissions policies** step:
+18. In the **Permissions policies** step:
 
    * Search for the policy you just created, e.g., `ratingo-lambda-exec-policy`
    * Select the checkbox next to it.
 
-17. Click **Next**.
+19. Click **Next**.
 
 
-18. Enter a **Role name**, e.g.:
+20. Enter a **Role name**, e.g.:
 
      ```
      ratingo-lambda-exec-role
      ```
 
-9. Click **Create role**.
+21. Click **Create role**.
 
 
 ### 5.2 Security Group
