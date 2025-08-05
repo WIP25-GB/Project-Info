@@ -135,7 +135,7 @@ We create a lambda layer for the psycopg python library
    * Click **Create**
 
 
-### 5.4: Creating a Lambda Functions
+### 5.4: Creating a Lambda Functions (Now playing)
 
 1. **Go to Lambda > Create Function**
 
@@ -156,14 +156,20 @@ We create a lambda layer for the psycopg python library
    * Choose **both private subnets**
    * Choose the  security group created in point 5.2
 
-4. **Upload function code:**
+4. Click Create function
+
+5. **Upload function code:**
 
    * Download the [function zip file](https://github.com/WIP25-GB/ratingo-backend/blob/main/lambdas/now-playing/Archive.zip)
    * Scroll to the **Code** section
    * Click **Upload from → .zip file**
    * Upload the `.zip` file for `ratingo-now-playing`, downloaded from your repository:
 
-5. **Attach the layer:**
+6. **Deploy the function:**
+
+   * Once uploaded, click **Deploy** to finalize the changes.
+
+7. **Attach the layer:**
 
    * Scroll to the **Layers** section (below the code editor)
    * Click **Add a layer**
@@ -171,8 +177,79 @@ We create a lambda layer for the psycopg python library
    * Select the layer you just created (`psycopg2-layer`)
    * Select **Version 1**, then click **Add**
 
+8. **Add environment variables:**
+   * Go to the **Configuration** section
+   * Select **Environment variables** from the left pane
+   * Click on edit and then click on **Add environment variable
+   * Add the following environment variables;
+    * omdb_api_key: Value should be the path to the omdb api key in paramater store eg `/ratingo/ext_api/omdb_api_key`
+    * omdb_endpoint: Value is `http://www.omdbapi.com`
+    * postgres_dbname: Value is the name of the database inside your rds instance eg `ratingo`
+    * postgres_host: Value is the endpoint of your rds instance eg `ratingo-db.cazcwami43fp.us-east-1.rds.amazonaws.com`
+    * postgres_pasword: Value should be the path to the postgres user password in paramater store eg `/ratingo/postgres/master_password`
+    * postgres_port: Value is `5432`
+    * postgres_user: Value is the master user from your rds instance eg `ratingo`
+    * tmdb_api_key: Value should be the path to the tmdb api key in paramater store eg `/ratingo/ext_api/tmdb_api_key`
+    * tmdb_cache_key: Value is `tmdbnowplaying-page`
+    * tmdb_endpoint: Value is `https://api.themoviedb.org/3`
+    * tmdb_path_now_playing: Value is `movie/now_playing`
+    * valkey_host: Value is the endpoint of your valkey instance eg `ratingo-valkey-instance-ddkahn.serverless.use1.cache.amazonaws.com`
+    * valkey_port: Value is `6379`
+    * valkey_ttl: Value is `3600`
+
+### 5.5: Creating a Lambda Functions (Top rated)
+
+1. **Go to Lambda > Create Function**
+
+2. **Choose “Author from scratch”**
+
+   * **Function name:** `ratingo-top-rated`
+   * **Runtime:** `Python 3.12`
+   * **Architecture:** `ARM 64`
+   * **Execution role:**
+
+     * Choose **Use an existing role**
+     * Select the previously created role (e.g., `ratingo-lambda-exec-role`)
+
+3. **Configure VPC access:**
+
+   * Expand the **Advanced settings**
+   * Select the VPC you created earlier
+   * Choose **both private subnets**
+   * Choose the  security group created in point 5.2
+
+4. Click Create function
+
+5. **Upload function code:**
+
+   * Download the [function zip file](https://github.com/WIP25-GB/ratingo-backend/blob/main/lambdas/top-rated/Archive.zip)
+   * Scroll to the **Code** section
+   * Click **Upload from → .zip file**
+   * Upload the `.zip` file for `ratingo-top-rated`, downloaded from your repository:
+
 6. **Deploy the function:**
 
    * Once uploaded, click **Deploy** to finalize the changes.
 
-7. Follow same steps to deploy `Top rated function` found [here]()
+7. **Attach the layer:**
+
+   * Scroll to the **Layers** section (below the code editor)
+   * Click **Add a layer**
+   * Choose **Custom layers**
+   * Select the layer you just created (`psycopg2-layer`)
+   * Select **Version 1**, then click **Add**
+
+8. **Add environment variables:**
+   * Go to the **Configuration** section
+   * Select **Environment variables** from the left pane
+   * Click on edit and then click on **Add environment variable
+   * Add the following environment variables;
+    * omdb_api_key: Value should be the path to the omdb api key in paramater store eg `/ratingo/ext_api/omdb_api_key`
+    * omdb_endpoint: Value is `http://www.omdbapi.com`
+    * postgres_dbname: Value is the name of the database inside your rds instance eg `ratingo`
+    * postgres_host: Value is the endpoint of your rds instance eg `ratingo-db.cazcwami43fp.us-east-1.rds.amazonaws.com`
+    * postgres_pasword: Value should be the path to the postgres user password in paramater store eg `/ratingo/postgres/master_password`
+    * postgres_port: Value is `5432`
+    * postgres_user: Value is the master user from your rds instance eg `ratingo`
+    * valkey_host: Value is the endpoint of your valkey instance eg `ratingo-valkey-instance-ddkahn.serverless.use1.cache.amazonaws.com`
+    * valkey_port: Value is `6379`
