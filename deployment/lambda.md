@@ -71,7 +71,7 @@ We create a dedicated **Lambda Execution Role** that can **read parameters from 
 9. Click **Create role**.
 
 
-### 5.1 Security Group
+### 5.2 Security Group
 
 We create a secuirty group to allows us control what traffic is sent in and out of our lambda functions.
 
