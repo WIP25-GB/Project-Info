@@ -67,7 +67,7 @@ We create a dedicated **Lambda Execution Role** that can **read parameters from 
      ```
      ratingo-lambda-exec-role
      ```
-     
+
 9. Click **Create role**.
 
 
@@ -95,3 +95,69 @@ We create a secuirty group to allows us control what traffic is sent in and out 
     Security group for ratingo lambda functions
     ```
 6. Click **Create security group**
+
+
+### 5.3: Creating a Lambda Layer
+
+We create a lambda layer for the psycopg python library 
+
+1. **Click to create a new Lambda layer:**
+
+   * Go to the **Lambda** section of the AWS Console.
+   * In the left menu, click **"Layers"**
+   * Click **"Create layer"**
+
+2. **Download the layer package:**
+
+   * Download the [psycopg2-layer.zip file](https://github.com/WIP25-GB/ratingo-backend/tree/main/lambdas/layers/psycopg2-layer)
+
+3. **Fill in layer details:**
+
+   * **Name:** `psycopg2-layer`
+   * **Upload ZIP file**: Choose the `.zip` file you downloaded.
+   * **Compatible runtimes:** Select **Python 3.12**
+   * **Compatible architectures: Select **arm64**
+   * Click **Create**
+
+
+### 5.4: Creating a Lambda Functions
+
+1. **Go to Lambda > Create Function**
+
+2. **Choose “Author from scratch”**
+
+   * **Function name:** `ratingo-now-playing`
+   * **Runtime:** `Python 3.12`
+   * **Architecture:** `ARM 64`
+   * **Execution role:**
+
+     * Choose **Use an existing role**
+     * Select the previously created role (e.g., `ratingo-lambda-exec-role`)
+
+3. **Configure VPC access:**
+
+   * Expand the **Advanced settings**
+   * Select the VPC you created earlier
+   * Choose **both private subnets**
+   * Choose the  security group created in point 5.2
+
+4. **Upload function code:**
+
+   * Download the [function zip file](https://github.com/WIP25-GB/ratingo-backend/blob/main/lambdas/now-playing/Archive.zip)
+   * Scroll to the **Code** section
+   * Click **Upload from → .zip file**
+   * Upload the `.zip` file for `ratingo-now-playing`, downloaded from your repository:
+
+5. **Attach the layer:**
+
+   * Scroll to the **Layers** section (below the code editor)
+   * Click **Add a layer**
+   * Choose **Custom layers**
+   * Select the layer you just created (`psycopg2-layer`)
+   * Select **Version 1**, then click **Add**
+
+6. **Deploy the function:**
+
+   * Once uploaded, click **Deploy** to finalize the changes.
+
+7. Follow same steps to deploy `Top rated function` found [here]()
