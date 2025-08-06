@@ -27,3 +27,8 @@ We are creating the API Gateway to serve as a single entry point that securely i
     * Add a route **ANY /rating** for the second lambda function 
 
 8. Deploy the API
+
+9. Configure CORS
+    * Click on CORS on the left panel
+    * Add `*` to the **Access-Control-Allow-Origin** field
+    * Save
