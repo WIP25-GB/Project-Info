@@ -195,7 +195,11 @@ We create a lambda layer for the psycopg python library
     * tmdb_path_now_playing: Value is `movie/now_playing`
     * valkey_host: Value is the endpoint of your valkey instance eg `ratingo-valkey-instance-ddkahn.serverless.use1.cache.amazonaws.com`
     * valkey_port: Value is `6379`
-    * valkey_ttl: Value is `3600`
+    * valkey_ttl: Value is `1209600`
+
+9. **Configure Runtime settings**
+    * Scroll to the runtime settings
+    * Click Edit and change the **Handler** to `main.now_playing`
 
 ### 5.5: Creating a Lambda Functions (Top rated)
 
@@ -253,3 +257,8 @@ We create a lambda layer for the psycopg python library
     * postgres_user: Value is the master user from your rds instance eg `ratingo`
     * valkey_host: Value is the endpoint of your valkey instance eg `ratingo-valkey-instance-ddkahn.serverless.use1.cache.amazonaws.com`
     * valkey_port: Value is `6379`
+
+9. **Configure Runtime settings**
+    * Scroll to the runtime settings
+    * Click Edit and change the **Handler** to `main.top_rated`
+
