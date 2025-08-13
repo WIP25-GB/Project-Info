@@ -1,158 +1,117 @@
-# 🎬 Movie Rating App – Project Overview
+# 🎬 Movie Ratings Aggregator – AWS Cloud Architecture
 
-A full-stack Movie Rating web application where users can rate and review movies. This app is designed to run on AWS, with an automated deployment pipeline and observability stack.
+## 📌 Overview
 
----
-
-## 🧑‍💻 Application Architecture
-
-```
-
-User
-│
-▼
-Frontend (Web App)
-
-* HTML/CSS/JavaScript
-  │
-  ▼
-  Backend (API - Python)
-* Python (Flask/FastAPI)
-  │
-  ▼
-  Database (RDS)
-* MySQL or PostgreSQL
-
-```
+The **Movie Ratings Aggregator** is a cloud-native application that lets users view aggregated ratings from multiple external sources.
+It is designed for **scalability, fault tolerance, and secure API integration** using **AWS services**.
 
 ---
 
-## 🌐 Frontend
+## 🏗 Architecture Summary
 
-- **Stack**: HTML, CSS, JavaScript
-- **Hosting**: Amazon EC2 instances (Auto Scaling Group)
-- **Access**: Served via Application Load Balancer
-- **Responsibilities**: 
-  - Movie search
-  - Rating submission UI
-  - Displaying reviews and scores
+This architecture is split into three main layers: **Frontend**, **Backend**, and **Data Layer**.
 
 ---
 
-## 🔧 Backend
+### **1️⃣ Frontend Layer**
 
-- **Language**: Python
-- **Framework**: Flask or FastAPI
-- **Hosting**: AWS Lambda (Serverless)
-- **Responsibilities**:
-  - Handle API requests from frontend
-  - Connect to RDS for data storage/retrieval
-  - Input validation, business logic
+* Built with **React.js**.
+* Served from **EC2 instances** in an **Auto Scaling Group**.
+* **Nginx** acts as a reverse proxy:
 
----
-
-## 🛢️ Database
-
-- **Engine**: Amazon RDS (MySQL or PostgreSQL)
-- **Responsibilities**:
-  - Store user data, ratings, and movie metadata
+  * Listens on port 80.
+  * Serves React static files.
+  * Proxies API requests to **Amazon API Gateway**.
+* **Amazon Route 53** handles DNS.
+* **AWS WAF** provides security filtering.
+* **AWS Certificate Manager (ACM)** provides SSL/TLS certificates.
 
 ---
 
-## 📊 Observability (Nice-to-Have)
+### **2️⃣ Backend Layer**
 
-- **Monitoring**: Prometheus
-- **Visualization**: Grafana
-- **Metrics**: API latency, errors, database response time, frontend uptime
+* **Amazon API Gateway** exposes REST endpoints for frontend communication.
+* **AWS Lambda Functions** (written in Python) handle business logic.
+* Functions query:
 
----
-
-## ☁️ AWS Infrastructure (Terraform Managed)
-
-### Core Components
-
-- **VPC**
-  - Custom VPC with public and private subnets
-
-- **Subnets**
-  - Public: for Load Balancer and frontend EC2s
-  - Private: for RDS
-
-- **NAT Gateway**
-  - For internet access from private subnets (e.g., RDS init scripts, Lambda egress)
-
-- **Application Load Balancer**
-  - To route traffic to the EC2 frontend instances
-
-- **RDS**
-  - Hosted MySQL/PostgreSQL instance in a private subnet
-
-- **Lambda**
-  - Python backend functions triggered via API Gateway
-
-- **Route53** (Nice-to-Have)
-  - Custom domain pointing to the Load Balancer
+  * **TMDB API**
+  * **OMDB API**
+  * **RDS**
+* Responses are cached in **ElastiCache** for performance.
 
 ---
 
-## 🚀 Deployment Strategy
+### **3️⃣ Data Layer**
 
-### CI/CD Pipelines
+The data layer ensures fast access to frequently used data while maintaining a durable and consistent source of truth.
 
-- **AWS CodeBuild**
-  - Build frontend assets
-  - Package backend code for Lambda
-  - Linting, tests, etc.
+* **Amazon RDS (Multi-AZ)**
 
-- **AWS CodeDeploy**
-  - Deploy frontend to EC2s
-  - Deploy backend to Lambda
-  - Update infrastructure using Terraform (optional)
+  * Stores persistent application data (user data, historical ratings, search logs, etc.).
+  * Runs in **private subnets** for security.
+  * Configured for **high availability** with Multi-AZ failover.
+* **Amazon ElastiCache (Redis)**
 
----
-
-## 📦 Repository Structure (Proposed)
-
-```
-
-movie-rating-app/
-├── frontend/
-│   └── index.html, styles.css, app.js
-├── backend/
-│   └── main.py, requirements.txt
-├── infrastructure/
-│   └── terraform/
-│       ├── main.tf
-│       ├── vpc.tf
-│       ├── ec2.tf
-│       ├── lambda.tf
-│       ├── rds.tf
-│       └── variables.tf
-├── .gitlab-ci.yml
-└── README.md
-
-```
+  * Acts as an in-memory cache for frequent API responses and query results.
+  * Reduces external API calls and speeds up repeated queries.
+  * Also deployed in **private subnets**.
 
 ---
 
-## ✅ Next Steps
+## 🔄 Request Flow
 
-1. Design the database schema (ratings, users, movies)
-2. Create frontend HTML/CSS mockups
-3. Build and test Python API locally
-4. Write Terraform code for VPC, RDS, Lambda, and EC2
-5. Set up CI/CD with CodeBuild and CodeDeploy
-6. Optionally add monitoring with Prometheus and Grafana
+1. **User** visits the frontend URL (managed by Route 53).
+2. **AWS WAF** filters malicious traffic.
+3. **Application Load Balancer** routes the request to an EC2 instance.
+4. **Nginx** serves React assets or forwards API requests to API Gateway.
+5. **API Gateway** triggers the relevant **AWS Lambda**.
+6. **Lambda Function**:
 
----
-
-## 📌 Notes
-
-- Use `ALB + ASG` for scalable frontend
-- Ensure Lambda has access to the private subnet if needed (via VPC config)
-- Secure RDS with security groups and IAM
-- Use Secrets Manager or Parameter Store for DB credentials
+   * Checks **ElastiCache** for cached data.
+   * If not cached, fetches from **TMDB**/**OMDB** APIs.
+   * Stores results in **RDS** for persistence and **ElastiCache** for faster future access.
+7. Response is returned to the frontend.
 
 ---
 
-```
+## 🛠 Tech Stack
+
+### Frontend
+
+* React.js
+* Nginx
+* EC2 + Auto Scaling Group
+
+### Backend
+
+* Python (AWS Lambda Functions)
+* Amazon API Gateway
+
+### **Data Layer**
+
+* **Amazon RDS (Multi-AZ)** – persistent relational database.
+* **Amazon ElastiCache (Redis)** – in-memory caching.
+
+### AWS Infrastructure & Security
+
+* Amazon Route 53
+* AWS WAF
+* Application Load Balancer
+* NAT Gateway
+* AWS Certificate Manager (ACM)
+* Systems Manager Parameter Store
+
+---
+
+## 📊 Diagram
+
+![Architecture Diagram](deployment/codered.png)
+
+---
+
+## 🔒 Security Considerations
+
+* Database and cache in **private subnets** (no public exposure).
+* API keys and DB credentials stored in **Parameter Store**.
+* HTTPS enforced with ACM certificates.
+* WAF rules against common exploits.
