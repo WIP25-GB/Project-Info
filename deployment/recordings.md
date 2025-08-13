@@ -1,5 +1,7 @@
 ## Recordings
 
+* [Aug 12, 2025](https://georgebrown-ca.zoom.us/rec/share/_Uz2y_WEsfHhQrg9gqFChxqROUHnN88llKIs0vd8MayCqocxmUWIf5XlxEXeKIEh.ykuqmqWdO3ImquIn)
+
 * [Aug 11, 2025](https://georgebrown-ca.zoom.us/rec/share/ImmajAIndyyelCvJ-g0306lpO_qeZQO5i7j9mrqspUK_fX84ZSimldD7rdoKbil_.yGg8R3h3uE4zHsNk)
 
 * [Aug 9, 2025](https://georgebrown-ca.zoom.us/rec/share/zn_abizSeM2zzH1Rq_s7N8kLcbYXzkKfFAjW0NknrjiUGVBej5EalHyu9mEsErnH.E4AULVFAAC1k9K1O)
